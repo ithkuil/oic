@@ -1,0 +1,89 @@
+<html>
+<head>
+    <title>Test JS3DB</title>
+    <script type="text/javascript" src="json2.js"></script>
+    <script type="text/javascript" src="sha1.js"></script>
+    <script type="text/javascript" src="S3Ajax.js"></script>
+    <script type="text/javascript" src="js3db.js"></script>
+    <script type="text/javascript">
+        function setMessage(msg, color) {
+            document.getElementById('statusmsg').innerHTML = msg;  
+            document.getElementById('statusmsg').style.color = color;  
+        }
+        
+        function setStatusMessage(msg) {
+            setMessage(msg, '#0f0')
+        }
+        
+        function setErrorMessage(msg) {
+            setMessage(msg, '#f00')
+        }
+        
+        function getClick(filename) {
+            JS3DB.get(filename, 
+                function(obj) {
+                    document.getElementById('contents').value = 
+                        JSON.stringify(obj);
+                    setStatusMessage('Successfully retrieved file ' + filename);
+                });
+        }
+        
+        function setClick(filename, contents) {
+            JS3DB.set(filename, contents,
+                function(req, obj) {
+                    setStatusMessage('Successfully saved file ' + filename);
+                },
+                function(req, obj) {
+                    setErrorMessage('ERROR saving file ' + filename
+                        + '. Error message ' + obj.Error.Message);
+                });   
+        }
+    </script>
+</head>
+<body onload="JS3DB.Auth.DOM.onload('js3dbSample');">
+    <h3>JS3DB Test Page - <a href="http://code.google.com/p/js3db/">JS3DB Project Page</a></h3>
+    <div id="js3dbSample" style="display:none;">
+        <form>
+            <table border="0" cellpadding="4" cellspacing="0">
+                <tr>
+                    <td valign="top">
+                        Filename: 
+                    </td><td valign="top">
+                      <input type="text" id="filename" size="30" />  
+                    </td><td rowspan="3">
+                        <div id="statusmsg" style="color: #0f0;"></div>
+                        <p>Use the form on the left to save/retrive files to 
+                        Amazon S3.</p>
+                        <p>Note that this is a test page, and all files are 
+                        saved with the public-read ACL.  Any data you save here
+                        may be viewed by others.</p>
+                        <p><b>Set</b> - To save data, enter the filname you wish
+                        to save, enter some data to save (You can either enter 
+                        a simple string, or create a more complex JSON object) 
+                        and click "Set".</p>
+                        <p><b>Get</b> - To retreive data, enter the filename you
+                        wish to retreive and click "Get".  If the file exists, 
+                        the data will appear in the "Contents" section.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top">
+                        Contents:
+                    </td><td valign="top">
+                        <textarea id="contents" rows="10" cols="40"></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td><td valign="top" align="right">
+                        <a href="#" onclick="JS3DB.Auth.DOM.logout();">Logout</a>
+                        <input type="button" id="btnGet" value="&nbsp;&nbsp;Get&nbsp;&nbsp;" onclick="getClick(document.getElementById('filename').value);" />
+                        <input type="button" id="btnSet" value="&nbsp;&nbsp;Set&nbsp;&nbsp;" onclick="setClick(document.getElementById('filename').value, document.getElementById('contents').value);" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</body>
+</html>

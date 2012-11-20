@@ -1,0 +1,11 @@
+{
+  "name": "oic",
+  "version": "0.0.1",
+  "description": "easy widget, code exchange, and cloud-based apps",
+  "dependencies": {
+    "express": "",
+    "jade": "",
+    "traverse": ""
+  }
+
+}

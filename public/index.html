@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+</title>
+<style>
+html {
+  height: 100%;
+}
+#ls {
+  width: 90%;
+  height: 250px;
+}
+#results {
+  width: 90%;
+  height: 200px;
+}
+#compile {
+  width: 90%;
+}
+</style>
+</head>
+
+<body>
+<textarea id="ls" placeholder="Enter LiveScript">
+</textarea>
+<button id="run">Run</button><br/>
+
+<textarea id="compile">
+</textarea>
+
+<textarea id="result">
+</textarea>
+
+<script src="jquery.min.js"></script>
+<script src="jquery-ui.min.js"></script>
+<script src="underscore-min.js"></script>
+<script src="prelude-browser-min-0.6.0.js"></script>
+<script src="livescript-1.1.0.js"></script>
+<script>
+$(document).ready(function() {
+  $('#run').click(function() {
+    $('#compile').html(LiveScript.compile($('#ls').val()));
+    $('#results').prepend(LiveScript.run($('#ls').val())); 
+  });
+});
+</script>
+</body>
+</html>
+
