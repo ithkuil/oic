@@ -1,1 +1,2 @@
-Easy widget, object exchange and app building in the cloud.
+
+System for plugin-based code generation and application development from high-level data
