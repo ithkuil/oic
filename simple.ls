@@ -1,4 +1,4 @@
-exports.data =
+export data =
   site:
     name: "Simplest Case"
     page:

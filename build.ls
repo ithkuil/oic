@@ -17,10 +17,9 @@ generators = {}
 
 getgen = (name) ->
   if generators[name]?
-    generators[name]
+    that
   else
-    generators[name] = {}
-    generators[name]
+    that = {}
 
 
 #find a method
