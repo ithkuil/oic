@@ -1,35 +1,31 @@
 traverse = require \traverse
 
 fill = (template, data) ->
-  fill = data.site{title:name, content:page}
-  traverse template .forEach (val) -> 
-    return unless @isLeaf
-    if val.indexOf('{{') >= 0
-      key = val.substr 2 val.length-4
-      @update fill[key]
+  vals = data.site{title:name, content:page}
+  traverse template .forEach -> 
+    | not @isLeaf                     => undefined
+    | it.indexOf('{{') >= 0           => @update vals[it.substr 2 it.length-4]
 
 open = -> "<#{it}>\n"
 close = -> "</#{it}>\n"
 
-serialize = !(data, outputfunc) ->
+spaces = -> [' ' for til it] .join ''
+
+serialize = (data, outputfunc) ->
   outputfunc '<!DOCTYPE html>\n'
-  traverse data .forEach (obj) ->
-    return unless obj?
-    spcs = [' ' for til @level] .join ''
-    if typeof obj is 'string'
-      outputfunc spcs + obj      
-      return obj
-    return unless typeof obj is 'object'
-    return if obj.length?
-    try
-      for prop, v of obj 
-        @before ->
-          outputfunc \\n + spcs + open prop
-        @after -> 
-          outputfunc \\n + spcs + close prop
-    catch
-      console.log e    
-    undefined
+  traverse data .forEach !->    
+    | not it?                   => undefined
+    | typeof it is 'string'     => outputfunc (spaces @level) + it
+    | typeof it isnt 'object'   => undefined
+    | it.length?                => undefined
+    | otherwise                 =>
+      try
+        for prop, v of it 
+          @before -> outputfunc \\n + (spaces @level) + open prop
+          @after  -> outputfunc \\n + (spaces @level) + close prop
+      catch
+        console.log e    
+
 
 export fill, serialize
 
